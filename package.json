@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:api": "node server/index.mjs",
     "build": "tsc && vite build",
+    "build:prod": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
