@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useAppStore } from '../../store/app-store';
 
 type AppShellProps = {
@@ -9,6 +9,10 @@ export function AppShell({ children }: AppShellProps) {
   const backendError = useAppStore((state) => state.backendError);
   const isBackendReady = useAppStore((state) => state.isBackendReady);
   const user = useAppStore((state) => state.userProfile);
+  const weeklyProgress = Math.min(
+    100,
+    Math.round((user.savedNotes / Math.max(user.weeklyGoal, 1)) * 100),
+  );
 
   return (
     <div className="app-shell">
@@ -32,14 +36,14 @@ export function AppShell({ children }: AppShellProps) {
           <strong>{user.currentStageLabel}</strong>
           <div className="hero-progress">
             <div className="mini-progress-bar">
-              <span style={{ width: `${user.savedNotes * 10}%` }} />
+              <span style={{ width: `${weeklyProgress}%` }} />
             </div>
             <span>
               {user.savedNotes} / {user.weeklyGoal} 条
             </span>
           </div>
           <span className={isBackendReady ? 'backend-pill backend-ready' : 'backend-pill'}>
-            {isBackendReady ? '✓ API connected' : '⚠ API offline'}
+            {isBackendReady ? '本地存储已就绪' : '本地存储不可用'}
           </span>
         </div>
       </header>
