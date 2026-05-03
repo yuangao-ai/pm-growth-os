@@ -11,6 +11,7 @@ import {
   sendCapabilityToCaptureApi,
   sendCoachStepToCaptureApi,
   sendNoteToCaptureApi,
+  updateCaptureDraftApi,
   updateConnectorApi,
   updateReflectionDraftApi,
 } from '../lib/api-client';
@@ -127,10 +128,19 @@ export const useAppStore = create<AppState>((set, get) => ({
     runWorkspaceAction(set, () => sendNoteToCaptureApi(noteId));
   },
   updateCaptureDraft: (draft: string) =>
-    set((state) => ({
-      captureDraft: draft,
-      captureSuggestions: inferCaptureSuggestions(draft, state.capabilities),
-    })),
+    set((state) => {
+      void updateCaptureDraftApi(draft).catch((error) => {
+        set({
+          backendError: formatError(error),
+          isBackendReady: false,
+        });
+      });
+
+      return {
+        captureDraft: draft,
+        captureSuggestions: inferCaptureSuggestions(draft, state.capabilities),
+      };
+    }),
   updateConnector: (connectorId, payload) => {
     set((state) => ({
       toolConnectors: state.toolConnectors.map((connector) =>

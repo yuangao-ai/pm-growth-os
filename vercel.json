@@ -1,17 +1,11 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run build:prod",
+  "outputDirectory": "dist",
+  "rewrites": [
     {
-      "src": "server/index.mjs",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/**",
-      "use": "static"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/server/index.mjs" },
-    { "src": "/(.*)", "dest": "/dist/$1" }
   ]
 }
